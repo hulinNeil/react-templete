@@ -8,6 +8,7 @@ export interface UserState {
   remember: boolean;
   userInfo: {
     userName: string;
+    avatar: string;
     permission: number; // 权限：1（增删改），2（查）
   };
 }
@@ -25,6 +26,7 @@ const model: UserModel = {
     userInfo: {
       userName: '',
       permission: 2,
+      avatar: '',
     },
   },
   reducers: {
@@ -65,7 +67,7 @@ const model: UserModel = {
         });
       }
     },
-    *logout({ payload }, { call, put }) {
+    *logout(_, { put }) {
       // yield call(api.logout);
       delUserStorage();
       yield put({
@@ -74,7 +76,7 @@ const model: UserModel = {
       });
       yield put(routerRedux.push('/login'));
     },
-    *checkStatus({ payload }, { call, put }) {
+    *checkStatus({ payload }, { put }) {
       // yield call(api.check);
       yield put({
         type: 'change',

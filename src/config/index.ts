@@ -1,10 +1,15 @@
-let host = ''; // 这里是本地开发版（Here is the development version）
+const apiConfig = {
+  host: '',
+  proxy: '/api',
+};
+
 if (process.env.REACT_APP_ENV === 'dev') {
   // 这里是线上测试版（Here is the beta version）
-  host = 'http://localhost:3100';
+  apiConfig.host = 'http://localhost:3100';
+  apiConfig.proxy = '/api/v1';
 } else if (process.env.REACT_APP_ENV === 'production') {
   // 这里是正式版（Here is the production version）
-  host = 'http://www.kiple.com';
+  apiConfig.host = 'http://www.kiple.com';
 }
 
-export { host };
+export { apiConfig };

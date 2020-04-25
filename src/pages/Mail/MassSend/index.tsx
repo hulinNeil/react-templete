@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import moment from 'moment';
-import { Card, Button, Table, Form, DatePicker, Radio, Select } from 'antd';
+import { Card, Button, Table, Form, DatePicker, Radio, Select, Input } from 'antd';
 import { RadioChangeEvent } from 'antd/es/radio';
 import Page from '@/components/Page';
-import { formateDate } from '@/utils/tools';
 import { ColumnProps } from 'antd/es/table';
 import { SassSendItem } from './data';
 import { TableListItem } from '../Template/data';
@@ -12,7 +11,10 @@ import './index.less';
 import { ConnectState } from '@/models';
 import { connect } from 'dva';
 import { RouteComponentProps } from 'dva/router';
-
+import CustomModal from '@/components/CustomModal';
+import { deleteCronjob } from '@/services/mail/cronjob';
+import { validateMailAddressee } from '@/utils/validateForm';
+window.moment = moment;
 const localList: SassSendItem[] = [
   {
     id: 51123,
@@ -60,7 +62,7 @@ const tempListLocal: TableListItem[] = [
 ];
 
 const renderColKinds = (kinds: number) => <span>{kinds === 1 ? '营销类' : kinds === 2 ? '报警类' : kinds === 3 ? '验证码' : '其他'}</span>;
-const renderColTime = (time: number) => <span>{formateDate(time)}</span>;
+const renderColTime = (time: number) => <span>{moment(time).format('YYYY-MM-DD HH:mm:ss')}</span>;
 const renderColStatus = (status: number) => <span>{status === 1 ? '待发送' : '已发送'}</span>;
 
 interface MassSendProps extends RouteComponentProps {
@@ -74,13 +76,26 @@ const MassSend: React.FC<MassSendProps> = (props) => {
   const [dataList, setDataList] = useState<SassSendItem[]>([]);
   const [editIndex, setEditIndex] = useState<number>(-1);
   const [datePikerVisible, setDatePikerVisible] = useState<boolean>(false);
-  const pageIndex = 1;
-  useEffect(() => {
+  const [pageno, setPageno] = useState<number>(1);
+
+  const getList = async () => {
+    setLoading(true);
+    // try {
+    //   const result = await getCronjobList({ pageno });
+    //   setDataList(result.data);
+    // } catch (error) {
+    //   console.error('出现错误');
+    // }
+    // setLoading(false);
     setTimeout(() => {
       setDataList(localList);
       setLoading(false);
     }, 1000);
-  }, []);
+  };
+
+  useEffect(() => {
+    getList();
+  }, [pageno]);
 
   // edit item
   const handleEdit = (item: SassSendItem) => {
@@ -91,9 +106,16 @@ const MassSend: React.FC<MassSendProps> = (props) => {
 
   // del item
   const handleDel = (item: SassSendItem) => {
-    const index = dataList.findIndex((e) => e.id === item.id);
-    dataList.splice(index, 1);
-    setDataList([...dataList]);
+    CustomModal.warning({
+      title: '删除定时任务',
+      content: '您确定要删除此定时任务吗？',
+      onOk: async () => {
+        const result = await deleteCronjob({ id: item.id });
+        if (result && result.status === 0) {
+          getList();
+        }
+      },
+    });
   };
 
   const onCancel = () => {
@@ -185,7 +207,8 @@ const MassSend: React.FC<MassSendProps> = (props) => {
           rowKey="id"
           dataSource={dataList}
           bordered
-          pagination={{ defaultPageSize: 10, showQuickJumper: true, current: pageIndex }}
+          onChange={(e) => setPageno(e.current || 1)}
+          pagination={{ total: 85, defaultPageSize: 10, current: pageno }}
         />
         <ModalForm
           title={editIndex === -1 ? '创建群发任务' : '修改任务'}
@@ -203,6 +226,12 @@ const MassSend: React.FC<MassSendProps> = (props) => {
               ))}
             </Select>
           </Form.Item>
+          <Form.Item label="模板变量" name="replaceWord" rules={[{ required: true, message: '必须选择模板' }]}>
+            <Input type="text" placeholder="以空格分隔需要替换的变量" />
+          </Form.Item>
+          <Form.Item label="收件人" name="to" rules={[{ validator: validateMailAddressee }]}>
+            <Input.TextArea placeholder="以空格分隔收件人邮箱" autoSize={{ minRows: 2 }} />
+          </Form.Item>
           <Form.Item label="发送规则" name="sendType" rules={[{ required: true, message: '必须选择发送类型' }]}>
             <Radio.Group onChange={statusChange}>
               <Radio value={1}>立即发送</Radio>
@@ -211,7 +240,11 @@ const MassSend: React.FC<MassSendProps> = (props) => {
           </Form.Item>
           {datePikerVisible && (
             <Form.Item label="发送时间" name="sendTime" rules={[{ required: true, message: '必须选择发送时间' }]}>
-              <DatePicker format="YYYY-MM-DD HH:mm:ss" showTime={{ defaultValue: moment('00:00:00', 'HH:mm:ss') }} />
+              <DatePicker
+                format="YYYY-MM-DD HH:mm:ss"
+                disabledDate={(current) => current && current < moment()}
+                showTime={{ defaultValue: moment('00:00:00', 'HH:mm:ss') }}
+              />
             </Form.Item>
           )}
         </ModalForm>

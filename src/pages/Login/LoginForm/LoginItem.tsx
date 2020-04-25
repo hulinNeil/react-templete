@@ -56,16 +56,9 @@ const LoginItem: React.FC<LoginItemProps> = (props) => {
   const [timing, setTiming] = useState(false);
   // 这么写是为了防止restProps中 带入 onChange, defaultValue, rules props tabUtil
   const {
-    onChange,
-    customProps,
-    defaultValue,
-    rules,
     name,
-    getCaptchaButtonText,
-    getCaptchaSecondText,
-    updateActive,
     type,
-    tabUtil,
+    customProps,
     ...restProps
   } = props;
 
@@ -79,7 +72,7 @@ const LoginItem: React.FC<LoginItemProps> = (props) => {
   }, []);
 
   useEffect(() => {
-    let interval: number = 0;
+    let interval: any;
     const { countDown } = props;
     if (timing) {
       interval = window.setInterval(() => {

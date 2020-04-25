@@ -17,7 +17,7 @@ const languageIcons = {
   'en-US': '🇺🇸',
 };
 
-const LangDropdown: React.FC<{}> = (props) => {
+const LangDropdown: React.FC<{}> = () => {
   const currentLocale: any = intl.getInitOptions().currentLocale;
   const bindClick = (e: { key: string }) => {
     if (currentLocale === e.key) {

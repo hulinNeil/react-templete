@@ -11,11 +11,14 @@ const { withRouter } = router;
 export interface AvatarDropdownProps extends RouteComponentProps {
   dispatch: Dispatch;
   history: History;
-  userInfo: any;
+  userInfo: {
+    userName: string;
+    avatar: string;
+  };
 }
 
 const AvatarDropdown: React.FC<AvatarDropdownProps> = ({ userInfo, dispatch }) => {
-  const bindClick = (e: { key: string }) => {
+  const bindClick = (e: { key: string }): void => {
     if (e.key === 'logout') {
       dispatch({
         type: 'user/logout',

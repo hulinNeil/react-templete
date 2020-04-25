@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Card, Button, Table, Form, Input, Cascader } from 'antd';
+import intl from 'react-intl-universal';
 import Page from '@/components/Page';
-import { formateDate } from '@/utils/tools';
 import { ColumnProps } from 'antd/es/table';
 import ModalForm from '@/components/ModalForm';
 import { TableListItem } from './data.d';
+import moment from 'moment';
+import CustomModal from '@/components/CustomModal';
 
 const FormItem = Form.Item;
 const options = [
@@ -106,12 +108,17 @@ const Template = () => {
 
   // del item
   const handleDel = (item: TableListItem) => {
-    console.log('点击删除', item);
-    const index = tempList.findIndex((e) => e.id === item.id);
-    tempList.splice(index, 1);
-    setTempList([...tempList]);
+    CustomModal.warning({
+      title: '删除模板',
+      content: `您确定要删除邮件模板：${item.title} 吗？`,
+      onOk: async () => {
+        console.log('点击删除', item);
+        const index = tempList.findIndex((e) => e.id === item.id);
+        tempList.splice(index, 1);
+        setTempList([...tempList]);
+      },
+    });
   };
-
   const onCancel = () => {
     setEditIndex(-1);
     setDialogVisible(false);
@@ -137,7 +144,7 @@ const Template = () => {
 
   const title = (
     <Button type="primary" onClick={() => setDialogVisible(true)}>
-      创建新模版
+      {intl.get('sms.tpl.create')}
     </Button>
   );
   const renderColButton = (item: TableListItem) => {
@@ -153,7 +160,7 @@ const Template = () => {
       </span>
     );
   };
-  const renderColTime = (time: number) => <span>{formateDate(time)}</span>;
+  const renderColTime = (time: number) => <span>{moment(time).format('YYYY-MM-DD HH:mm:ss')}</span>;
   const renderColStatus = (status: number) => <span>{status === 1 ? '启用中' : '禁用中'}</span>;
   const renderColSystem = (system: string[]) => <span>{system.join('-')}</span>;
   const columns: ColumnProps<TableListItem>[] = [
@@ -201,7 +208,7 @@ const Template = () => {
   ];
 
   return (
-    <Page title="模版管理">
+    <Page title={intl.get('sms.tpl.title')}>
       <Card title={title} loading={false} bordered={true}>
         <Table
           size="small"

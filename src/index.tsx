@@ -8,7 +8,7 @@ import models from './models';
 import '@/assets/styles/index.less';
 
 // Set language
-let lang = storage.getItem('lang_local') ? storage.getItem('lang_local') : (navigator.languages && navigator.languages[0]) || navigator.language;
+const lang = storage.getItem('lang_local') ? storage.getItem('lang_local') : (navigator.languages && navigator.languages[0]) || navigator.language;
 let currentLocale = '';
 switch (lang) {
   case 'zh-CN':

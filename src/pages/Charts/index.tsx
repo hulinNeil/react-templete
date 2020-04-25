@@ -1,12 +1,10 @@
 import React, { Component } from 'react';
-import { Layout } from 'antd';
-import { connect, router } from 'dva';
+import { router } from 'dva';
 
-import { storage } from '@/utils/tools';
 import Bar from './Bar';
 import Radar from './Radar';
 
-const { withRouter, Route, Switch, Redirect } = router;
+const { Route, Switch, Redirect } = router;
 
 class Charts extends Component {
   render() {

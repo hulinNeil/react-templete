@@ -4,7 +4,7 @@ import Template from './Template';
 import Overview from './Overview';
 import Sensitive from './Sensitive';
 import MassSend from './MassSend';
-import MassSent from './MassSent';
+import SentList from './SentList';
 
 const { Route, Switch, Redirect } = router;
 
@@ -15,7 +15,7 @@ const SMS: React.FC<{}> = () => {
       <Route path="/sms/template" component={Template} />
       <Route path="/sms/sensitive" component={Sensitive} />
       <Route path="/sms/mass-send" component={MassSend} />
-      <Route path="/sms/mass-sent" component={MassSent} />
+      <Route path="/sms/mass-sent" component={SentList} />
       <Redirect to="/sms/overview" />
     </Switch>
   );

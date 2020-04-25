@@ -1,5 +1,4 @@
 import { get, post, put } from '@/utils/send';
-const proxy = '/api/';
 
 export interface LoginParamsType {
   userName: string;
@@ -24,19 +23,19 @@ export interface UserInfoType {
 }
 
 export const login = (params: LoginParamsType): Promise<UserInfoType> => {
-  return post(proxy + 'login', params);
+  return post('/login', params);
 };
 
 export const logout = () => {
-  return get(proxy + 'logout', {});
+  return get('/logout', {});
 };
 
 export const updateBasicInfo = (params: any) => {
-  return put(proxy + 'update_basic_info', params);
+  return put('/update_basic_info', params);
 };
 
 export const check = (params: any) => {
-  return put(proxy + 'check', params);
+  return put('/check', params);
 };
 
 export const getFakeCaptcha = (mobile: string) => {

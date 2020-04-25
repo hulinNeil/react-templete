@@ -4,28 +4,7 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import Page from '@/components/Page';
 import './index.less';
-
-const validateContent = (rule: any, value: string) => {
-  value = value.trim();
-  let msg = '';
-  if (value === '<p><br></p>') {
-    msg = '必须输入邮件模板';
-  } else {
-    const replaces = value.match(/{\d+}/gi);
-    const repetitiveKeys: string[] = [];
-    replaces &&
-      replaces.sort().sort((a, b) => {
-        if (a === b && !~repetitiveKeys.indexOf(a)) {
-          repetitiveKeys.push(a);
-        }
-        return 0;
-      });
-    if (repetitiveKeys.length > 0) {
-      msg = `不能有重复的模板变量：${repetitiveKeys.join('-')}`;
-    }
-  }
-  return msg ? Promise.reject(msg) : Promise.reject();
-};
+import { validateMailContent } from '@/utils/validateForm';
 
 const options = [
   {
@@ -97,7 +76,7 @@ const Create: React.FC<{}> = () => {
             className="mail-editor-content"
             label="邮件正文"
             name="content"
-            rules={[{ required: true, message: '必须输入邮件内容' }, { validator: validateContent }]}
+            rules={[{ required: true, message: '必须输入邮件内容' }, { validator: validateMailContent }]}
           >
             <ReactQuill theme="snow" modules={modules} placeholder="请输入邮件模板" />
           </Form.Item>

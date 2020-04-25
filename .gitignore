@@ -37,3 +37,6 @@ coverage/
 build/
 logs/
 dist/
+
+package-lock.json
+yarn.lock

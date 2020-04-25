@@ -2,11 +2,30 @@ import axios, { AxiosResponse } from 'axios';
 import Qs from 'qs';
 import { message } from 'antd';
 import { storage, delUserStorage } from './tools';
-import { host } from '@/config/index';
+import { apiConfig } from '@/config/index';
+
+function checkLoginAndSetToken(resp: AxiosResponse): boolean {
+  const token = resp.headers.authorization;
+  const expireTime = resp.headers.expire_time;
+  const code = resp.data.code;
+  if (code === 401) {
+    delUserStorage();
+    message.error(resp.data.message, 1000);
+    setTimeout(function () {
+      window.location.href = '/';
+    }, 500);
+    return false;
+  }
+  if (token) {
+    const tokenArr = token.split(' ');
+    storage.setItem('request_token', tokenArr[1]);
+    storage.setItem('expire_time', Number(expireTime));
+  }
+  return true;
+}
 
 axios.interceptors.request.use(function (config) {
-  console.log(config);
-  config.url = host + config.url;
+  config.url = apiConfig.host + apiConfig.proxy + config.url;
   const requestToken = storage.getItem('request_token');
   config.headers['Authorization'] = 'Bearer ' + requestToken;
   config.headers.post['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8';
@@ -27,12 +46,12 @@ axios.interceptors.response.use(
 );
 
 export const post = (url: string, param: any) => {
-  let data = Qs.stringify(param);
+  const data = Qs.stringify(param);
   return axios.post(url, data).then((resp) => resp.data);
 };
 
 export const put = (url: string, param: any) => {
-  let data = Qs.stringify(param);
+  const data = Qs.stringify(param);
   return axios.put(url, data).then((resp) => resp.data);
 };
 
@@ -59,23 +78,3 @@ export const download = (url: string, params: any) => {
     };
   });
 };
-
-function checkLoginAndSetToken(resp: AxiosResponse) {
-  let token = resp.headers.authorization;
-  let expireTime = resp.headers.expire_time;
-  let code = resp.data.code;
-  if (code === 401) {
-    delUserStorage();
-    message.error(resp.data.message, 1000);
-    setTimeout(function () {
-      window.location.href = '/';
-    }, 500);
-    return false;
-  }
-  if (token) {
-    let tokenArr = token.split(' ');
-    storage.setItem('request_token', tokenArr[1]);
-    storage.setItem('expire_time', Number(expireTime));
-  }
-  return true;
-}

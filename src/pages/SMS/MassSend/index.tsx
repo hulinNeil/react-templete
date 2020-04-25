@@ -3,7 +3,6 @@ import moment from 'moment';
 import { Card, Button, Table, Form, DatePicker, Radio, Select } from 'antd';
 import { RadioChangeEvent } from 'antd/es/radio';
 import Page from '@/components/Page';
-import { formateDate } from '@/utils/tools';
 import { ColumnProps } from 'antd/es/table';
 import { SassSendItem } from './data.d';
 import { TableListItem } from '../Template/data';
@@ -57,7 +56,7 @@ const tempListLocal: TableListItem[] = [
 ];
 
 const renderColKinds = (kinds: number) => <span>{kinds === 1 ? '营销类' : kinds === 2 ? '报警类' : kinds === 3 ? '验证码' : '其他'}</span>;
-const renderColTime = (time: number) => <span>{formateDate(time)}</span>;
+const renderColTime = (time: number) => <span>{moment(time).format('YYYY-MM-DD HH:mm:ss')}</span>;
 const renderColStatus = (status: number) => <span>{status === 1 ? '待发送' : '已发送'}</span>;
 
 const MassSend: React.FC<{}> = () => {

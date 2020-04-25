@@ -6,7 +6,7 @@ module.exports = {
     commonjs: true,
     es6: true,
   },
-  extends: ['eslint:recommended', 'plugin:react/recommended'],
+  extends: ['eslint:recommended', 'plugin:react/recommended', 'plugin:@typescript-eslint/recommended'],
   parser: '@typescript-eslint/parser',
   // Set the JavaScript parser options
   parserOptions: {
@@ -87,6 +87,11 @@ module.exports = {
     'max-len': [1, 200],
     // Duplicate module imports are not allowed(禁止重复模块导入)
     'no-duplicate-imports': 2,
+    ///////////////////
+    //  typescript   //
+    //////////////////
+    '@typescript-eslint/no-explicit-any': 0,
+    '@typescript-eslint/explicit-function-return-type': 0,
     //////////////
     //  React   //
     //////////////

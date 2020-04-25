@@ -49,7 +49,7 @@ export default class Radar extends Component {
         },
         {
           indicator: (function () {
-            let res = [];
+            const res = [];
             for (let i = 1; i <= 12; i++) {
               res.push({ text: i + '月', max: 100 });
             }

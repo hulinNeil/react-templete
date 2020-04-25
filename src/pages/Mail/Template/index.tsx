@@ -3,12 +3,14 @@ import { Card, Button, Table } from 'antd';
 import { router, connect } from 'dva';
 import { History } from 'history';
 import Page from '@/components/Page';
-import { formateDate } from '@/utils/tools';
 import { ColumnProps } from 'antd/es/table';
 import { TableListItem } from './data';
 import './index.less';
 import { ConnectState } from '@/models';
 import { RouteComponentProps } from 'dva/router';
+import moment from 'moment';
+import CustomModal from '@/components/CustomModal';
+import { delTemplate } from '@/services/mail/template';
 const { withRouter } = router;
 
 const tempListLocal: TableListItem[] = [
@@ -58,10 +60,19 @@ const Template: React.FC<TemplateProps> = ({ history, permission }) => {
 
   // del item
   const handleDel = (item: TableListItem) => {
-    console.log('点击删除', item);
     const index = tempList.findIndex((e) => e.id === item.id);
-    tempList.splice(index, 1);
-    setTempList([...tempList]);
+    CustomModal.warning({
+      title: '删除模板',
+      content: `您确定要删除邮件模板：${item.title} 吗？`,
+      onOk: async () => {
+        tempList.splice(index, 1);
+        setTempList([...tempList]);
+        const result = await delTemplate({ id: item.id });
+        if (result && result.status === 0) {
+          // getList();
+        }
+      },
+    });
   };
 
   const handleTableChange = (pagination: any, filters: any) => {
@@ -102,7 +113,7 @@ const Template: React.FC<TemplateProps> = ({ history, permission }) => {
       </span>
     );
   };
-  const renderColTime = (time: number) => <span>{formateDate(time)}</span>;
+  const renderColTime = (time: number) => <span>{moment(time).format('YYYY-MM-DD HH:mm:ss')}</span>;
   const renderColStatus = (status: number) => <span>{status === 1 ? '启用中' : '禁用中'}</span>;
   const renderColSystem = (system: string[]) => <span>{system.join('-')}</span>;
   const columns: ColumnProps<TableListItem>[] = [

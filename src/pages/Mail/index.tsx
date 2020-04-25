@@ -4,7 +4,7 @@ import Template from './Template';
 import Overview from './Overview';
 import Sensitive from './Sensitive';
 import MassSend from './MassSend';
-import MassSent from './MassSent';
+import SentList from './SentList';
 import { ConnectState } from '@/models';
 
 const { Route, Switch, Redirect } = router;
@@ -22,7 +22,7 @@ const Mail: React.FC<MailProps> = ({ permission }) => {
       <Route path="/mail/template" component={Template} />
       <Route path="/mail/sensitive" component={Sensitive} />
       <Route path="/mail/mass-send" component={MassSend} />
-      <Route path="/mail/mass-sent" component={MassSent} />
+      <Route path="/mail/mass-sent" component={SentList} />
       {permission === 1 && <Route path="/mail/create-template" component={Create} />}
       <Redirect to="/mail/overview" />
     </Switch>

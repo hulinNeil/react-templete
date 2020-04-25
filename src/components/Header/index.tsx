@@ -11,13 +11,16 @@ import LangDropdown from './LangDropdown';
 import ProductDropdown from './ProductDropdown/index';
 import ShortcutList from './Shortcut';
 import './index.less';
+import { Menu } from '@/services/login';
 
 const Header: React.FC<{}> = () => {
-  const menuListLocal = storage.getItem('menu_list');
-  let menuList: Array<any> = [];
+  const menuListLocal: Menu[] = storage.getItem('menu_list');
+  let menuList: Menu[] = [];
   menuListLocal &&
     menuListLocal.forEach((item) => {
-      menuList = menuList.concat(item.children);
+      if (item.children) {
+        menuList = menuList.concat(item.children);
+      }
     });
   const isSingleProduct = menuList.filter((item) => item.children).length < 4;
 

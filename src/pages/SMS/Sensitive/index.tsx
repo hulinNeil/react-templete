@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Card, Button, Table, Form, Input } from 'antd';
 import Page from '@/components/Page';
-import { formateDate } from '@/utils/tools';
 import { ColumnProps } from 'antd/es/table';
 import { SensitiveItem } from './data.d';
-// import ModalForm from './ModalForm';
 import ModalForm from '@/components/ModalForm';
+import moment from 'moment';
 
 const localList: SensitiveItem[] = [
   {
@@ -82,7 +81,7 @@ const Sensitive = () => {
       </span>
     );
   };
-  const renderColTime = (time: number) => <span>{formateDate(time)}</span>;
+  const renderColTime = (time: number) => <span>{moment(time).format('YYYY-MM-DD HH:mm:ss')}</span>;
   const columns: ColumnProps<SensitiveItem>[] = [
     {
       title: 'ID',

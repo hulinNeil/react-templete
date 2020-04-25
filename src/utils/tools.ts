@@ -1,12 +1,12 @@
 // 获取cookie
-export const getCookie = (name: string) => {
+export const getCookie = (name: string): string => {
   const reg = new RegExp(`(^| )${name}(?:=([^;]*))?(;|$)`);
   const val = document.cookie.match(reg);
-  return val ? (val[2] ? unescape(val[2]) : '') : null;
+  return val ? (val[2] ? unescape(val[2]) : '') : '';
 };
 
 // 设置cookie
-export const setCookie = (name: string, value: any, expires = 24 * 60, path = '/', domain = null, secure = false) => {
+export const setCookie = (name: string, value: any, expires = 24 * 60, path = '/', domain = null, secure = false): void => {
   const expdate = new Date();
   expdate.setMinutes(expdate.getMinutes() + parseInt(expires)); // 默认为1天(24*60)
   // eslint-disable-next-line
@@ -16,19 +16,10 @@ export const setCookie = (name: string, value: any, expires = 24 * 60, path = '/
   document.cookie = cookietemp;
 };
 
-const time33 = (str: string) => {
-  // 哈希time33算法
-  let hash = '';
-  for (let i = 0, len = str.length, hash = 5381; i < len; ++i) {
-    hash += (hash << 5) + str.charCodeAt(i);
-  }
-  return hash & 0x7fffffff;
-};
-
 // 深拷贝
-export function deepCopy(source) {
+export function deepCopy(source: any): void {
   let copy, i, len, prop;
-  let _hasOwn = window['Object']['prototype']['hasOwnProperty'];
+  const _hasOwn = window['Object']['prototype']['hasOwnProperty'];
   if (typeof source !== 'object' || source == null || typeof source.nodeType === 'number') {
     copy = source;
   } else if (typeof source.length === 'number') {
@@ -49,35 +40,10 @@ export function deepCopy(source) {
   return copy;
 }
 
-export const validateIP = (ip) => {
-  const reg = /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
-  return reg.test(ip);
-};
-
 export const delay = (millis) =>
   new Promise((resolve) => {
     setTimeout(() => resolve(true), millis);
   });
-
-export function formateDate(time: number) {
-  if (!time) {
-    return '';
-  }
-  let date = new Date(time);
-  return (
-    date.getFullYear() +
-    '-' +
-    (date.getMonth() + 1) +
-    '-' +
-    date.getDate() +
-    ' ' +
-    date.getHours() +
-    ':' +
-    date.getMinutes() +
-    ':' +
-    date.getSeconds()
-  );
-}
 
 // 封装localStorage
 export const storage = {
@@ -86,7 +52,7 @@ export const storage = {
   removeItem: (key: string) => localStorage.removeItem(key),
 };
 
-export function delUserStorage() {
+export function delUserStorage(): void {
   storage.removeItem('user_key');
   storage.removeItem('request_token');
   storage.removeItem('front_routers');
