@@ -56,12 +56,18 @@ const LoginItem: React.FC<LoginItemProps> = (props) => {
   const [timing, setTiming] = useState(false);
   // 这么写是为了防止restProps中 带入 onChange, defaultValue, rules props tabUtil
   const {
-    name,
-    type,
+    onChange, // eslint-disable-line
     customProps,
+    defaultValue, // eslint-disable-line
+    rules, // eslint-disable-line
+    name,
+    getCaptchaButtonText, // eslint-disable-line
+    getCaptchaSecondText, // eslint-disable-line
+    updateActive, // eslint-disable-line
+    type,
+    tabUtil, // eslint-disable-line
     ...restProps
   } = props;
-
   const onGetCaptcha = useCallback(async (mobile: string) => {
     const result = await getFakeCaptcha(mobile);
     if (result === false) {
